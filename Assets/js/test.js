@@ -4,10 +4,15 @@ function uploadTest()
 
 		e.preventDefault();
 
-		let file = document.getElementById("file").files[0];
-		formData = new FormData();
-		formData.append("file", file);
-
+		let filesAmount = document.getElementById("file").files.length;
+		var formData = new FormData();
+		
+		for (let i = 0; i < filesAmount; i++)
+		{	
+			console.log(document.getElementById("file").files[i]);
+			formData.append("file[]", document.getElementById("file").files[i]);
+		}
+		
 		$.ajax({
 			type : "POST",
 			dataType : "JSON",
@@ -21,7 +26,7 @@ function uploadTest()
 				if(response.success)
 				{
 					alert("El archivo se subio!");
-				}
+				}	
 				else
 				{
 					alert(response.error);

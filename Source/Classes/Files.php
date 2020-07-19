@@ -5,31 +5,26 @@ class Files
 
 	private $_fileName;
 
+	private $_extension;
 	private $_allowedEntensions;
 
 	private $_target;
 	private $_finalDir;
 	private $_rootDir;
 
-
-	public function __construct($name, $extension)
+	public function __construct()
 	{	
-
-		$this->_fileName = basename($name);
-
-		$this->_extension = $extension;
 		$this->_allowedEntensions = array("pdf", "xls", "docx", "doc", "jpg", "jpeg", "png", "xlsx");
 
 		$this->_rootDir = $_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/";
-		$this->_target = $this->_rootDir . $this->getFinalDir() . $this->_fileName;
 	}
 
-	private function validateExtension() : bool 
+	private function validateExtension($extension) : bool 
 	{
 
 		$isValid = false;
 
-		if (in_array($this->_extension, $this->_allowedEntensions))
+		if (in_array($extension, $this->_allowedEntensions))
 		{
 			$isValid = true;
 		}
@@ -38,37 +33,54 @@ class Files
 
 	}
 
-	/* We'll see if this method is useful in a future. Maybe we could try to get the files to delete with this
-	private function getSelectedFiles($file) : string
+	/*
+	*@param var $_FILES['file']
+	*/
+	public function uploadFile($files) 
 	{
-		return explode(".", $file['name']);
-	}*/
-
-
-	public function uploadFile($file) 
-	{
-		if($file['error'] > 0)
+		if($files['error'] < 0)
 		{
-			echo die(json_encode(array("error" => "Error detectado!")));
-		} 
-
-		if(!$this->validateExtension()) 
-		{
-			echo die(json_encode(array("error" => "Extension invalida")));
+			echo die(json_encode(array("error" => "Error inesperado!")));
 		}
 
-		if(move_uploaded_file($file['tmp_name'], $this->_target))
+		//Get the amount of files we have to upload through the name
+		$filesAmount = count($files['name']);
+
+		for($i = 0; $i < $filesAmount; $i++)
 		{
-			echo json_encode(array("success" => true));
+
+			//Convert the current string into array by dot. Example: 'helloword.pdf' => ["helloword", "pdf"]
+			$currentFileInfo = explode(".", $files['name'][$i]);
+
+			$this->_extension = end($currentFileInfo);
+			$this->_fileName = basename($files['name'][$i]);
+
+			if($this->validateExtension($this->_extension)) 
+			{	
+
+
+				$this->_target = $this->_rootDir . $this->getFolder($this->_extension) . $this->_fileName;
+
+				if(move_uploaded_file($files['tmp_name'][$i], $this->_target))
+				{
+					echo json_encode(array("success" => true));
+				}
+
+			}
+
 		}
 
 	}
 
 	//Depend the extension of the file, it will be in different folder. Left it to the end
-	private function getFinalDir() : string
+	/*
+	* @param var str
+	* return (str)
+	*/
+	private function getFolder($extension) : string
 	{
 
-		switch ($this->_extension) {
+		switch ($extension) {
 			case 'docx':
 				$this->_finalDir = "word/";
 				break;
