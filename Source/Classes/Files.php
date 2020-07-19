@@ -3,11 +3,12 @@
 class Files 
 {
 
-	private $_target;
 	private $_fileName;
-	private $_finalDir;
+
 	private $_allowedEntensions;
 
+	private $_target;
+	private $_finalDir;
 	private $_rootDir;
 
 
@@ -17,7 +18,7 @@ class Files
 		$this->_fileName = basename($name);
 
 		$this->_extension = $extension;
-		$this->_allowedEntensions = array("pdf", "xls", "docx", "jpg");
+		$this->_allowedEntensions = array("pdf", "xls", "docx", "doc", "jpg", "jpeg", "png", "xlsx");
 
 		$this->_rootDir = $_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/";
 		$this->_target = $this->_rootDir . $this->getFinalDir() . $this->_fileName;
@@ -72,6 +73,10 @@ class Files
 				$this->_finalDir = "word/";
 				break;
 			
+			case "doc":
+				$this->_finalDir = "word/";
+				break;
+
 			case 'pdf':
 				$this->_finalDir = "pdf/";
 				break;
@@ -80,10 +85,18 @@ class Files
 				$this->_finalDir = "excel/";
 				break;
 
+			case "xlsx":
+				$this->_finalDir = "excel/";
+				break;
+
 			case 'jpg':	 
 				$this->_finalDir = 'image/';
 				break;
-			
+
+			case "jpeg":
+				$this->_finalDir = "image/";
+				break;
+
 			case 'png':	 
 				$this->_finalDir = 'image/';
 				break;	

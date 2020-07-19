@@ -7,8 +7,8 @@ if(isset($_FILES['file']))
 
 	$currentFileInfo = explode(".", $_FILES['file']['name']);
 
-	//end($currentFileInfo) = The extension of the file
-	$file = new Files($_FILES['file']['name'], end($currentFileInfo));
+	//current($currentFileInfo) = The name of the file | end($currentFileInfo) = The extension of the file
+	$file = new Files(current($currentFileInfo), end($currentFileInfo));
 
 	$file->uploadFile($_FILES['file']);
  
