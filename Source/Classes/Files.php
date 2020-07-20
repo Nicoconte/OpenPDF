@@ -12,6 +12,8 @@ class Files
 	private $_finalDir;
 	private $_rootDir;
 
+	private $_response = array();
+
 	public function __construct()
 	{	
 		$this->_allowedEntensions = array("pdf", "xls", "docx", "doc", "jpg", "jpeg", "png", "xlsx");
@@ -58,17 +60,25 @@ class Files
 			if($this->validateExtension($this->_extension)) 
 			{	
 
-
+				//Assemble the path to drop the files
 				$this->_target = $this->_rootDir . $this->getFolder($this->_extension) . $this->_fileName;
 
 				if(move_uploaded_file($files['tmp_name'][$i], $this->_target))
 				{
-					echo json_encode(array("success" => true));
+					$this->_response[] = array("success" => true, "name" => $this->_fileName); 
+				}
+				else 
+				{	
+					//In case if it fail, we'll inform what file failed
+					$this->_response[] = array("success" => false, "name" => $this->_fileName); 
 				}
 
 			}
 
 		}
+
+
+		echo json_encode($this->_response);
 
 	}
 
