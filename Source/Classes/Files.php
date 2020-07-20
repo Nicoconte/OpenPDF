@@ -21,6 +21,14 @@ class Files
 		$this->_rootDir = $_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/";
 	}
 
+	/*
+	*<summary>
+	*	We´ll use this method to check the extension of the file in a global way. 
+	*	For an specific validation, we should use/create the class Validators
+	*<summary>
+	* @param var str
+	* @return var bool 
+	*/
 	private function validateExtension($extension) : bool 
 	{
 
@@ -45,7 +53,7 @@ class Files
 			echo die(json_encode(array("error" => "Error inesperado!")));
 		}
 
-		//Get the amount of files we have to upload through the name
+		//Get the amount of files we uploaded by name
 		$filesAmount = count($files['name']);
 
 		for($i = 0; $i < $filesAmount; $i++)
@@ -67,12 +75,11 @@ class Files
 				{
 					$this->_response[] = array("success" => true, "name" => $this->_fileName); 
 				}
-				else 
-				{	
-					//In case if it fail, we'll inform what file failed
-					$this->_response[] = array("success" => false, "name" => $this->_fileName); 
-				}
 
+			}
+			else
+			{
+				$this->_response[] = array("success" => false, "name" => $this->_fileName);				
 			}
 
 		}
@@ -82,8 +89,10 @@ class Files
 
 	}
 
-	//Depend the extension of the file, it will be in different folder. Left it to the end
 	/*
+	*<summary>
+	*	Depend the extension of the file, it will be in different folder. Left it to the end
+	*<summary
 	* @param var str
 	* return (str)
 	*/
