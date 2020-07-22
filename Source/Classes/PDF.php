@@ -1,7 +1,10 @@
 <?php
+
+include $_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Classes/Files.php";
+
 require $_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/vendor/autoload.php";
 
-class PDF
+class PDF extends Files
 {	
 
 	/*
@@ -23,8 +26,14 @@ class PDF
 
 			$merger->merge("browser", "default.pdf", "P");
 
+			//We must delete everything!
+			$this->deleteFiles($pdfToMerge);	
+
 		} catch (Exception $e) {
-			die("No se pudo unir los archivos!");
+
+			//we should all the uploaded files anyway!
+			$this->deleteFiles($pdfToMerge);
+			die("Los archivos deben ser PDF para poder unirlos. Vuelva a la aplicacion y suba PDF");
 		}
 	}
 }

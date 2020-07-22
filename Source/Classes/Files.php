@@ -17,15 +17,14 @@ class Files
 	public function __construct()
 	{	
 		$this->_allowedEntensions = array("pdf", "xls", "docx", "doc", "jpg", "jpeg", "png", "xlsx");
-
 		$this->_rootDir = $_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/";
 	}
 
 	/*
-	*<summary>
-	*	We´ll use this method to check the extension of the file in a global way. 
-	*	For an specific validation, we should use/create the class Validators
-	*<summary>
+	*
+	*We´ll use this method to check the extension of the file in a global way. 
+	*For an specific validation, we should use/create the class Validators
+	*
 	* @param var str
 	* @return var bool 
 	*/
@@ -71,6 +70,9 @@ class Files
 				//Assemble the path to drop the files
 				$this->_target = $this->_rootDir . $this->getFolder($this->_extension) . $this->_fileName;
 
+				//If the file exist in that target, we break the loop and go on with the anothers
+				if(file_exists($this->_target)) break;
+
 				if(move_uploaded_file($files['tmp_name'][$i], $this->_target))
 				{
 					$this->_response[] = array("success" => true, "name" => $this->_fileName); 
@@ -90,9 +92,9 @@ class Files
 	}
 
 	/*
-	*<summary>
-	*	Depend the extension of the file, it will be in different folder. Left it to the end
-	*<summary
+	*
+	*Depend the extension of the file, it will be in different folder. Left it to the end
+	*
 	* @param var str
 	* return (str)
 	*/
@@ -137,6 +139,21 @@ class Files
 		}
 
 		return $this->_finalDir;
+	}
+
+	/*
+	*  @param var array
+	*/
+	protected function deleteFiles($filesToDelete)
+	{	
+
+		foreach($filesToDelete as $file)
+		{	
+			$fileInfo = explode(".", $file);
+
+			unlink($_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/" . $this->getFolder(end($fileInfo)) . $file);
+		}
+
 	}
 
 }
