@@ -44,9 +44,7 @@
 						<td>Acciones</td>
 					</tr>
 				</thead>
-				<tbody id='file-display'>
-					
-				</tbody>
+				<tbody id='file-display'></tbody>
 			</table>
 		</div>
 	</div>

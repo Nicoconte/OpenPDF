@@ -4,6 +4,9 @@ const selectedFiles = [];
 //This var will contain the files after upload
 const uploadedFiles = [];
 
+/*
+* @param var str
+*/
 function resetFileInput(documentID)
 {
 	document.getElementById(documentID).value = "";
@@ -42,10 +45,10 @@ function getBlobFiles(id)
 
 
 /*
-* @param var blob
+* @param var blob, var str, 
 */
 
-function uploadFilesToServer(files, documentID, callback)
+function uploadFilesToServer(files, documentID)
 {
 
 	let correctFilesAmount = 0;
@@ -54,7 +57,7 @@ function uploadFilesToServer(files, documentID, callback)
 	$.ajax({
 		type : "POST",
 		dataType : "JSON",
-		url : "Source/Scripts/UploadTest.php",
+		url : "Source/Scripts/UploadFiles.php",
 		cache : false,
 		contentType : false,
 		processData : false,			
@@ -162,7 +165,7 @@ function mergeFiles()
 		}
 		else
 		{	
-			downloadFile("Source/Scripts/MergeTest.php", fileInfo, "PDMergedByOpenPDF.pdf");
+			downloadFile("Source/Scripts/MergeFiles.php", fileInfo, "PDMergedByOpenPDF.pdf");
 
 		}
 		//Clear array after download
@@ -198,25 +201,64 @@ function downloadFile(url, data, name)
 }
 
 
+/*
+* @param var array
+*/
 function showFilesOnTable(files)
 {
 	let template = ""
 
 	files.forEach(file => {
 		template += 
-		`<tr> 
+		`<tr data-file-name=${file}> 
 			<td class='small'>
 				${file}
 			</td>
 			<td>
 				<button class='btn btn-sm btn-dark text-white'><i class='fa fa-pencil'></i></button>
-				<button class='btn btn-sm btn-danger text-white'><i class='fa fa-trash'></i></button>
+				<button class='delete-file btn btn-sm btn-danger text-white'><i class='fa fa-trash'></i></button>
 			</td>
 		</tr>`
 	});
 
 	$("#file-display").html(template);
 }
+
+function deleteFileFromPreview()
+{
+	$(document).on("click", ".delete-file", function() {
+
+								//button  =>    td    =>   tr
+		let elementFromTable = $(this)[0].parentElement.parentElement;
+		let fileToDelete = $(elementFromTable).attr("data-file-name");
+
+		deleteFileFromServer([fileToDelete]);
+
+		uploadedFiles.forEach(file => {
+			if(file === fileToDelete)
+			{
+				index = uploadedFiles.indexOf(file);
+					
+				if (index > -1)
+				{
+					uploadedFiles.splice(index, 1);
+				}	
+			}
+		})
+
+		showFilesOnTable(uploadedFiles);
+
+	})
+}
+
+/*
+* @param var array
+*/
+function deleteFileFromServer(file)
+{
+	$.post("Source/Scripts/DeleteSpecificFile.php", {"fileToDelete" : file});
+}
+
 
 function main()
 {
@@ -234,7 +276,6 @@ function main()
 
 		if(validateExtension( selectedFiles , getExtensionByAction(action) ))
 		{
-			test(selectedFiles);
 			uploadFilesToServer( blobFiles, documentID );
 		}
 		else
@@ -266,6 +307,7 @@ function ready()
 	main();
 	clearFilesArray();
 	mergeFiles();
+	deleteFileFromPreview();
 	//test();
 }
 

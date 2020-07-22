@@ -58,11 +58,11 @@ class Files
 		for($i = 0; $i < $filesAmount; $i++)
 		{
 
-			//Convert the current string into array by dot. Example: 'helloword.pdf' => ["helloword", "pdf"]
+			//Convert the current string into array by dot. Example: 'hello_word.pdf' => ["helloword", "pdf"]
 			$currentFileInfo = explode(".", $files['name'][$i]);
 
 			$this->_extension = end($currentFileInfo);
-			$this->_fileName = basename($files['name'][$i]);
+			$this->_fileName = str_replace(" ", "_", basename($files['name'][$i]));
 
 			if($this->validateExtension($this->_extension)) 
 			{	
@@ -144,18 +144,16 @@ class Files
 	/*
 	*  @param var array
 	*/
-	protected function deleteFiles($filesToDelete)
+	public function deleteFiles($filesToDelete)
 	{	
 
 		foreach($filesToDelete as $file)
 		{	
 			$fileInfo = explode(".", $file);
-
-			unlink($_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/" . $this->getFolder(end($fileInfo)) . $file);
+			unlink($_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/" . $this->getFolder(end($fileInfo)) . str_replace(" ", "_", $file));
 		}
 
 	}
-
 }
 
 ?>
