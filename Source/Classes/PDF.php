@@ -10,18 +10,21 @@ class PDF extends Files
 	/*
 	* @param array
 	*/
-	public function mergePDF($pdfToMerge)
+	public function mergePDF($pdfToMerge, $configuration="")
 	{	
 
 		try {
 
+			//If the didnt specify what kind of config he want, we should set "all" config (default)
+			$config = empty($configuration) ? "all" : $configuration;
+
 			$merger = new \Clegginabox\PDFMerger\PDFMerger;
 
-			foreach($pdfToMerge as $pdf)
+			for($i=0; $i < count($pdfToMerge); $i++)
 			{	
 
 				//We filter the pdf in some way when we tell to the program where he have to get the files
-				$merger->addPDF($_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/pdf/" . $pdf, "all");
+				$merger->addPDF($_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/pdf/" . $pdfToMerge[$i], $config[$i]);
 			}
 
 			$merger->merge("browser", "default.pdf", "P");

@@ -4,6 +4,9 @@ const selectedFiles = [];
 //This var will contain the files after upload
 const uploadedFiles = [];
 
+//Set configuration
+const configuration = [];
+
 /*
 * @param var str
 */
@@ -130,7 +133,6 @@ function getExtensionByAction(action)
 * @return bool
 */
 //Merge funciona | word funciona | img funciona
-
 function validateExtension(files, extensions)
 {	
 
@@ -207,21 +209,25 @@ function downloadFile(url, data, name)
 function showFilesOnTable(files)
 {
 	let template = ""
+	let amountOfFilesOnScreen = 0;
+	let id = 0;
 
 	files.forEach(file => {
 		template += 
 		`<tr data-file-name=${file}> 
+			<td> ${id++} </td>
 			<td class='small'>
 				${file}
 			</td>
 			<td>
 				<button class='btn btn-sm btn-dark text-white'><i class='fa fa-pencil'></i></button>
-				<button class='delete-file btn btn-sm btn-danger text-white'><i class='fa fa-trash'></i></button>
+				<button class='delete-file btn btn-sm btn-danger text-white mt-1'><i class='fa fa-trash'></i></button>
 			</td>
 		</tr>`
+		amountOfFilesOnScreen++;
 	});
 
-	$("#file-display").html(template);
+	$("#file-display").html((amountOfFilesOnScreen <= 0) ? "<tr> <td> <h4> No hay archivos </h4> </td> </tr>" : template);
 }
 
 function deleteFileFromPreview()
@@ -259,6 +265,12 @@ function deleteFileFromServer(file)
 	$.post("Source/Scripts/DeleteSpecificFile.php", {"fileToDelete" : file});
 }
 
+function setConfigurationOnMerger(config)
+{
+	$("#save-config-merger").click(function() {
+
+	});
+}
 
 function main()
 {
@@ -308,6 +320,7 @@ function ready()
 	clearFilesArray();
 	mergeFiles();
 	deleteFileFromPreview();
+	showFilesOnTable(uploadedFiles);
 	//test();
 }
 

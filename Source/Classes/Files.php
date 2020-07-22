@@ -58,10 +58,12 @@ class Files
 		for($i = 0; $i < $filesAmount; $i++)
 		{
 
-			//Convert the current string into array by dot. Example: 'hello_word.pdf' => ["helloword", "pdf"]
+			//Convert the current string into array. Example: 'hello_word.pdf' => ["helloword", "pdf"]
 			$currentFileInfo = explode(".", $files['name'][$i]);
 
 			$this->_extension = end($currentFileInfo);
+
+			//Replace the white space is necesary to send it back the name and then use it in the client side
 			$this->_fileName = str_replace(" ", "_", basename($files['name'][$i]));
 
 			if($this->validateExtension($this->_extension)) 
@@ -70,7 +72,7 @@ class Files
 				//Assemble the path to drop the files
 				$this->_target = $this->_rootDir . $this->getFolder($this->_extension) . $this->_fileName;
 
-				//If the file exist in that target, we break the loop and go on with the anothers
+				//If the file exist in that target, we break the loop and go on with the others
 				if(file_exists($this->_target)) break;
 
 				if(move_uploaded_file($files['tmp_name'][$i], $this->_target))
