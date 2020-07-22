@@ -77,6 +77,7 @@ function uploadFilesToServer(files, documentID, callback)
 			{	
 				alert("Los archivos se subieron correctamente");
 				resetFileInput(documentID);	
+				showFilesOnTable(uploadedFiles);	
 			}
 			else
 			{
@@ -147,22 +148,6 @@ function validateExtension(files, extensions)
 	return areValid;
 }
 
-
-function test(files)
-{
-	//$(document).on("click", "#test-btn", function() {
-		//validateExtension(getFiles(), getExtensionByAction("merge-files"));
-		//let element = $(this)[0].parentElement;
-		//alert($(element).attr("data-action"));
-	//});
-
-	files.forEach(file => {
-		console.log(file);
-	})
-
-}
-
-
 function mergeFiles()
 {
 	$("#merge-btn").click(function(e) {
@@ -177,11 +162,13 @@ function mergeFiles()
 		}
 		else
 		{	
-			downloadFileWithAjax("Source/Scripts/MergeTest.php", fileInfo, "PDMergedByOpenPDF.pdf");
+			downloadFile("Source/Scripts/MergeTest.php", fileInfo, "PDMergedByOpenPDF.pdf");
 
 		}
 		//Clear array after download
 		clearFilesArray();
+		showFilesOnTable(uploadedFiles);
+
 	});
 }
 
@@ -191,7 +178,7 @@ function mergeFiles()
 * @param str, object, str
 */
 
-function downloadFileWithAjax(url, data, name)
+function downloadFile(url, data, name)
 {
 	$.ajax({
 		type : "POST",
@@ -210,6 +197,26 @@ function downloadFileWithAjax(url, data, name)
 	});	
 }
 
+
+function showFilesOnTable(files)
+{
+	let template = ""
+
+	files.forEach(file => {
+		template += 
+		`<tr> 
+			<td class='small'>
+				${file}
+			</td>
+			<td>
+				<button class='btn btn-sm btn-dark text-white'><i class='fa fa-pencil'></i></button>
+				<button class='btn btn-sm btn-danger text-white'><i class='fa fa-trash'></i></button>
+			</td>
+		</tr>`
+	});
+
+	$("#file-display").html(template);
+}
 
 function main()
 {
@@ -241,6 +248,18 @@ function main()
 }
 
 
+function test(files)
+{
+	//$(document).on("click", "#test-btn", function() {
+		//validateExtension(getFiles(), getExtensionByAction("merge-files"));
+		//let element = $(this)[0].parentElement;
+		//alert($(element).attr("data-action"));
+	//});
+
+	files.forEach(file => {
+		console.log(file);
+	})
+}
 
 function ready()
 {
