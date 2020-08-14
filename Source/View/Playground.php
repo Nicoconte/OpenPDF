@@ -21,19 +21,19 @@
 				<input class='ml-4 mt-4' type="file" name='file[]' multiple id='file-3'>
 				<button id='test-btn' class='btn ml-2 btn-primary text-white'>Subir archivos!</button>
 			</form>			
-			<button class='btn bg-info mt-3 ml-2 text-white'>Word a PDF</button>
+			<button id="word-btn" class='btn bg-info mt-3 ml-2 text-white'>Word a PDF</button>
 			
 			<form data-form-number='4' data-action='excel-to-pdf' method="POST" enctype="multipart/form-data" class='mt-3'>
 				<input class='ml-4 mt-4' type="file" name='file[]' multiple id='file-4'>
 				<button id='test-btn' class='btn ml-2 btn-primary text-white'>Subir archivos!</button>
 			</form>			
-			<button class='btn bg-success mt-3 ml-2 text-white'>Excel a PDF</button>
+			<button id="excel-btn" class='btn bg-success mt-3 ml-2 text-white'>Excel a PDF</button>
 			
 			<form data-form-number='5' data-action='img-to-pdf' method="POST" enctype="multipart/form-data" class='mt-3'>
 				<input class='ml-4 mt-4' type="file" name='file[]' multiple id='file-5'>
 				<button id='test-btn' class='btn ml-2 btn-primary text-white'>Subir archivos!</button>
 			</form>															
-			<button class='btn bg-warning mt-3 ml-2 text-white'>Img a PDF</button>
+			<button id="img-btn" class='btn bg-warning mt-3 ml-2 text-white'>Img a PDF</button>
 
 		</div>
 		<div class="test-display w-50 h-100 d-flex justify-content-center">

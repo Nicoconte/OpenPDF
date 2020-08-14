@@ -20,7 +20,7 @@ class Files
 		$this->_rootDir = $_SERVER['DOCUMENT_ROOT'] . "/OpenPDF/Source/Uploads/";
 	}
 
-	/*
+	/**
 	*
 	*We´ll use this method to check the extension of the file in a global way. 
 	*For an specific validation, we should use/create the class Validators
@@ -42,7 +42,7 @@ class Files
 
 	}
 
-	/*
+	/**
 	*@param var $_FILES['file']
 	*/
 	public function uploadFile($files) 
@@ -63,7 +63,7 @@ class Files
 
 			$this->_extension = end($currentFileInfo);
 
-			//Replace the white space is necesary to send it back the name and then use it in the client side
+			//Replace the white space is necesary to send it back
 			$this->_fileName = str_replace(" ", "_", basename($files['name'][$i]));
 
 			if($this->validateExtension($this->_extension)) 
@@ -93,7 +93,7 @@ class Files
 
 	}
 
-	/*
+	/**
 	*
 	*Depend the extension of the file, it will be in different folder. Left it to the end
 	*
@@ -143,7 +143,7 @@ class Files
 		return $this->_finalDir;
 	}
 
-	/*
+	/**
 	*  @param var array
 	*/
 	public function deleteFiles($filesToDelete)

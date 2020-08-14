@@ -8,7 +8,7 @@ if(isset($_GET['p']))
 }
 else
 {
-	$p = "Playground";
+	$p = "Demo";
 }
 
 ?>

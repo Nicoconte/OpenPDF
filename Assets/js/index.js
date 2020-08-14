@@ -15,10 +15,15 @@ function resetFileInput(documentID)
 	document.getElementById(documentID).value = "";
 }
 
-function clearFilesArray() 
+function clearUploadedFilesArr() 
 {	
-	selectedFiles.length = 0;
 	uploadedFiles.length = 0;
+}
+
+
+function clearSelectedFilesArr()
+{
+	selectedFiles.length = 0;
 }
 
 /*
@@ -165,25 +170,85 @@ function mergeFiles()
 			alert("Deben ser 2 archivos como minimo");
 			return;
 		}
+		else if (uploadedFiles.length === 0)
+		{
+			alert("No ha seleccionado nada!");
+		}		
 		else
 		{	
 			downloadFile("Source/Scripts/MergeFiles.php", fileInfo, "PDMergedByOpenPDF.pdf");
 
 		}
 		//Clear array after download
-		clearFilesArray();
+		clearUploadedFilesArr();
 		showFilesOnTable(uploadedFiles);
 
 	});
 }
 
+function convertWord()
+{
+	$("#word-btn").click(function(e) {
+		e.preventDefault();
+
+		let file = {"wordFile" : uploadedFiles[0]}
+
+		if(uploadedFiles.length >= 2)
+		{
+			alert("Solo se puede convertir un archivo!");	
+			return;		
+		}
+		else if (uploadedFiles.length === 0)
+		{
+			alert("No ha seleccionado nada!");
+		}		
+		else
+		{
+			downloadFile("Source/Scripts/WordToPDF.php", file, "WordConvertedWithOpenPDF.pdf");
+		}
+
+		clearUploadedFilesArr();
+		showFilesOnTable(uploadedFiles);		
+
+	})
+}
+
+
+function convertExcel()
+{
+	$("#excel-btn").click(function(e) {
+		e.preventDefault();
+
+		//Enviamos un array porque el back lo necesita
+		let file = {"spreadsheetFile" : uploadedFiles[0]}
+
+
+		if(uploadedFiles.length >= 2)
+		{
+			alert("Solo se puede convertir un archivo!");	
+			return;		
+		}
+		else if (uploadedFiles.length === 0)
+		{
+			alert("No ha seleccionado nada!");
+		}
+		else
+		{
+			downloadFile("Source/Scripts/ExcelToPDF.php", file, "ExcelConvertedWithOpenPDF.pdf");
+		}
+
+		clearUploadedFilesArr();
+		showFilesOnTable(uploadedFiles);		
+
+	});
+}
 
 /*
 * Lib "jquery-ajax-native" https://github.com/acigna/jquery-ajax-native
 * @param str, object, str
 */
 
-function downloadFile(url, data, name)
+function downloadFile(url, data, name="")
 {
 	$.ajax({
 		type : "POST",
@@ -211,6 +276,7 @@ function showFilesOnTable(files)
 	let template = ""
 	let amountOfFilesOnScreen = 0;
 	let id = 0;
+	let alternativeTemplate = "<tr> <td> <h4> No hay archivos </h4> </td> <td> </td> </tr>";
 
 	files.forEach(file => {
 		template += 
@@ -220,14 +286,13 @@ function showFilesOnTable(files)
 				${file}
 			</td>
 			<td>
-				<button class='btn btn-sm btn-dark text-white'><i class='fa fa-pencil'></i></button>
-				<button class='delete-file btn btn-sm btn-danger text-white mt-1'><i class='fa fa-trash'></i></button>
+				<button class='delete-file btn btn-sm btn-danger text-white'><i class='fa fa-trash'></i></button>
 			</td>
 		</tr>`
 		amountOfFilesOnScreen++;
 	});
 
-	$("#file-display").html((amountOfFilesOnScreen <= 0) ? "<tr> <td> <h4> No hay archivos </h4> </td> </tr>" : template);
+	$(".file-display").html((amountOfFilesOnScreen <= 0) ? alternativeTemplate : template);
 }
 
 function deleteFileFromPreview()
@@ -294,33 +359,32 @@ function main()
 		{
 			alert("Los archivos subidos no corresponden a la accion!");
 			resetFileInput(documentID);
-			clearFilesArray();
+			clearSelectedFilesArr();
 		}
 
 	});
 }
 
 
-function test(files)
+function test()
 {
 	//$(document).on("click", "#test-btn", function() {
 		//validateExtension(getFiles(), getExtensionByAction("merge-files"));
 		//let element = $(this)[0].parentElement;
 		//alert($(element).attr("data-action"));
 	//});
-
-	files.forEach(file => {
-		console.log(file);
-	})
 }
 
 function ready()
 {
 	main();
-	clearFilesArray();
+	clearUploadedFilesArr();
+	clearSelectedFilesArr();
 	mergeFiles();
 	deleteFileFromPreview();
 	showFilesOnTable(uploadedFiles);
+	convertWord();
+	convertExcel();
 	//test();
 }
 
