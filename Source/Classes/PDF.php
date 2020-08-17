@@ -38,15 +38,6 @@ class PDF extends Files
 
 	public function createTemplateByPDF($pdfFiles)
 	{
-		$render = new \Mpdf\Mpdf();
-		$render->SetImportUse();
-
-		$newPDF = null;
-
-		foreach ($pdfFiles as $pdf) 
-		{
-			
-		}
 	}
 }
 
